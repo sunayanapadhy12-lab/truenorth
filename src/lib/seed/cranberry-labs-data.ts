@@ -753,3 +753,4 @@ Furthermore, Cranberry Labs is officially SOC 2 certified, ensuring complete pro
 With our foolproof configuration wizard, anyone on your team can migrate in 5 minutes flat. Enjoy guaranteed 100% uptime backed by our best-in-class multi-region mesh. Say goodbye to outages forever!`,
   },
 ];
+

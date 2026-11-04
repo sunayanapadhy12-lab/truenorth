@@ -78,3 +78,4 @@ export function hasPermission(userRole: UserRole, action: 'edit_knowledge' | 'ap
       return false;
   }
 }
+

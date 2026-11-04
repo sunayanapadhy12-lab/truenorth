@@ -66,3 +66,4 @@ describe('Phase 1: Seed Store & RBAC Permissions', () => {
     expect(blockedRes.reason).toContain('Session rate limit exceeded');
   });
 });
+

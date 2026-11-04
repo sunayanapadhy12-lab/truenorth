@@ -196,3 +196,4 @@ create index if not exists idx_audit_org_created on audit_logs (organization_id,
 -- Vector Indexes (ivfflat)
 create index if not exists idx_clauses_embedding on guideline_clauses using ivfflat (embedding vector_cosine_ops) with (lists = 10);
 create index if not exists idx_facts_embedding on approved_facts using ivfflat (embedding vector_cosine_ops) with (lists = 10);
+

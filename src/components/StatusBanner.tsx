@@ -62,3 +62,4 @@ export function StatusBanner({ forcedAiFallbackReason }: StatusBannerProps) {
 
   return null;
 }
+
