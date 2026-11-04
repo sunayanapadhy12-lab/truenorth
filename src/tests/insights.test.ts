@@ -58,3 +58,4 @@ describe('Phase 7: Insights Aggregation & Analytics', () => {
     expect(rate).toBe(33); // 2/6 = 33.3% -> 33%
   });
 });
+
