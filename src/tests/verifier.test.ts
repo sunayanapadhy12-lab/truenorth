@@ -156,3 +156,4 @@ describe('Phase 4: Citation Verifier & Pipeline Fallback', () => {
     expect(result.findings.every((f) => f.origin === 'rule-based')).toBe(true);
   });
 });
+
