@@ -988,3 +988,4 @@ export default function BrandKnowledgePage() {
     </div>
   );
 }
+

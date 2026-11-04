@@ -88,3 +88,4 @@ Every image and diagram must carry descriptive alt text for screen readers.
     expect(result.fileSizeBytes).toBe(buffer.length);
   });
 });
+
