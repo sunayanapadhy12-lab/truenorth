@@ -106,7 +106,9 @@ export async function POST(req: NextRequest) {
     };
 
     // 1. Create in store
-    mockStore.createSubmission(submission, content.trim());
+    const { version } = mockStore.createSubmission(submission, content.trim(), versionId);
+    const activeVersionId = version.id;
+
     mockStore.logEvent('submission.created', 'submission', submissionId, user.id, {
       title: submission.title,
       channel,
@@ -117,7 +119,7 @@ export async function POST(req: NextRequest) {
     const sessionId = req.cookies.get('truenorth_user_id')?.value || user.id;
     const reviewResult = await executeReviewPipeline({
       content: content.trim(),
-      versionId,
+      versionId: activeVersionId,
       channel,
       audience,
       organizationId: CRANBERRY_ORG.id,
@@ -126,7 +128,7 @@ export async function POST(req: NextRequest) {
     });
 
     // 3. Store findings for Version 1
-    mockStore.setFindingsForVersion(versionId, reviewResult.findings);
+    mockStore.setFindingsForVersion(activeVersionId, reviewResult.findings);
 
     // 4. Save in Supabase if configured
     if (isSupabaseConfigured && supabaseServer) {
@@ -178,7 +180,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       success: true,
       submissionId,
-      versionId,
+      versionId: activeVersionId,
       findingsCount: reviewResult.findings.length,
       isAiFallback: reviewResult.isAiFallback,
       fallbackReason: reviewResult.fallbackReason,

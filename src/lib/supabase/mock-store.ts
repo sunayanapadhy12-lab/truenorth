@@ -202,11 +202,11 @@ class MockStore {
     };
   }
 
-  public createSubmission(submission: Submission, initialContent: string) {
+  public createSubmission(submission: Submission, initialContent: string, customVersionId?: string) {
     this.data.submissions.push(submission);
 
     const version: SubmissionVersion = {
-      id: `ver-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+      id: customVersionId || `ver-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
       submissionId: submission.id,
       versionNumber: 1,
       content: initialContent,
@@ -288,9 +288,12 @@ class MockStore {
   public updateFinding(
     id: string,
     updates: Partial<Finding>,
-    actionedBy: string
+    actionedBy: string,
+    versionId?: string
   ) {
-    const finding = this.data.findings.find((f) => f.id === id);
+    const finding = this.data.findings.find(
+      (f) => f.id === id && (!versionId || f.versionId === versionId)
+    );
     if (finding) {
       Object.assign(finding, updates, {
         actionedBy,

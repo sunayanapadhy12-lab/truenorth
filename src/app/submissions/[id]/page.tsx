@@ -88,6 +88,7 @@ export default function SubmissionReviewPage() {
 
       // Refresh data to reflect Version N+1
       await fetchData();
+      setSelectedFindingId(undefined);
     } catch (err: unknown) {
       alert(err instanceof Error ? err.message : 'Error accepting finding');
     }
@@ -109,6 +110,7 @@ export default function SubmissionReviewPage() {
       if (!res.ok) throw new Error(data.error || 'Failed to apply custom edit');
 
       await fetchData();
+      setSelectedFindingId(undefined);
     } catch (err: unknown) {
       alert(err instanceof Error ? err.message : 'Error applying edit');
     }
@@ -130,6 +132,7 @@ export default function SubmissionReviewPage() {
       if (!res.ok) throw new Error(data.error || 'Failed to dismiss finding');
 
       await fetchData();
+      setSelectedFindingId(undefined);
     } catch (err: unknown) {
       alert(err instanceof Error ? err.message : 'Error dismissing finding');
     }

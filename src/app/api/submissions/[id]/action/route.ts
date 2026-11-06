@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth';
 import { mockStore } from '@/lib/supabase/mock-store';
 import { isSupabaseConfigured, supabaseServer } from '@/lib/supabase/server';
-import { recomputeFindingOffsets } from '@/lib/engine/rules-engine';
+import { applyCleanReplacement, runDeterministicRules } from '@/lib/engine/rules-engine';
 import { Finding } from '@/lib/types';
 
 export async function POST(
@@ -70,7 +70,8 @@ export async function POST(
           status: 'dismissed',
           dismissReason: dismissReason.trim(),
         },
-        user.id
+        user.id,
+        currentVersion.id
       );
 
       mockStore.logEvent('finding.dismissed', 'finding', findingId, user.id, {
@@ -101,57 +102,117 @@ export async function POST(
     }
 
     // 3. Handle Accept or Edit -> Modifies content and creates Version N+1
-    const replacementText =
-      action === 'accept'
-        ? targetFinding.suggestedRewrite || targetFinding.quotedSpan
-        : customEdit || '';
-
-    if (action === 'edit' && !replacementText.trim()) {
-      return NextResponse.json({ error: 'Custom replacement cannot be empty.' }, { status: 400 });
+    let replacementText = '';
+    if (action === 'accept') {
+      if (!targetFinding.suggestedRewrite || !targetFinding.suggestedRewrite.trim()) {
+        return NextResponse.json(
+          {
+            error:
+              'A safe automatic replacement is not available for this finding. Please use the Edit option to provide a manual correction.',
+          },
+          { status: 400 }
+        );
+      }
+      replacementText = targetFinding.suggestedRewrite.trim();
+    } else if (action === 'edit') {
+      if (!customEdit || !customEdit.trim()) {
+        return NextResponse.json({ error: 'Custom replacement cannot be empty.' }, { status: 400 });
+      }
+      replacementText = customEdit.trim();
     }
 
-    // Compute new content by replacing the exact target span
-    const originalContent = currentVersion.content;
-    const startIndex = targetFinding.spanStart ?? originalContent.indexOf(targetFinding.quotedSpan);
-    const endIndex = targetFinding.spanEnd ?? startIndex + targetFinding.quotedSpan.length;
+    // Apply position-aware clean replacement with duplicate prevention and grammar preservation
+    const replacementResult = applyCleanReplacement(
+      currentVersion.content,
+      targetFinding,
+      replacementText
+    );
 
-    if (startIndex === -1) {
-      return NextResponse.json({ error: 'Could not locate quoted span in document text.' }, { status: 400 });
+    if (!replacementResult.success || !replacementResult.newContent) {
+      return NextResponse.json(
+        { error: replacementResult.error || 'Could not locate quoted span in document text.' },
+        { status: 400 }
+      );
     }
 
-    const updatedContent =
-      originalContent.substring(0, startIndex) +
-      replacementText +
-      originalContent.substring(endIndex);
+    const updatedContent = replacementResult.newContent;
+    const actualAppliedReplacement = replacementResult.actualNewSpan || replacementText;
 
     // Create Version N+1
     const newVersion = mockStore.createNewVersion(submissionId, updatedContent, user.id);
 
-    // Recompute offsets for remaining findings
-    const updatedFindings: Finding[] = recomputeFindingOffsets(
-      currentFindings,
-      findingId,
-      targetFinding.quotedSpan,
-      replacementText,
-      updatedContent
-    ).map((f) => {
-      if (f.id === findingId) {
-        return {
-          ...f,
-          versionId: newVersion.id,
-          status: action === 'accept' ? 'accepted' : 'edited',
-          suggestedRewrite: replacementText,
-          actionedBy: user.id,
-          actionedAt: new Date().toISOString(),
-        };
+    // Re-run the review engine on the updated draft
+    const terms = mockStore.getTerminology();
+    const clauses = mockStore.getClauses();
+    const freshFindings = runDeterministicRules({
+      content: updatedContent,
+      versionId: newVersion.id,
+      channel: submission.channel,
+      audience: submission.audience,
+      terms,
+      clauses,
+    });
+
+    // Check if the custom edit still introduces a violation
+    if (action === 'edit') {
+      const stillViolating = freshFindings.some(
+        (f) =>
+          f.sourceId === targetFinding.sourceId &&
+          f.quotedSpan.toLowerCase() === actualAppliedReplacement.toLowerCase()
+      );
+      if (stillViolating) {
+        return NextResponse.json(
+          { error: 'The provided custom edit still violates brand governance rules.' },
+          { status: 400 }
+        );
       }
-      return {
+    }
+
+    // Build the resolved actioned finding
+    const resolvedActionedFinding: Finding = {
+      ...targetFinding,
+      versionId: newVersion.id,
+      status: action === 'accept' ? 'accepted' : 'edited',
+      suggestedRewrite: actualAppliedReplacement,
+      actionedBy: user.id,
+      actionedAt: new Date().toISOString(),
+    };
+
+    // Carry forward previously resolved findings from earlier versions
+    const previouslyResolved: Finding[] = currentFindings
+      .filter((f) => f.id !== findingId && f.status !== 'open')
+      .map((f) => ({
         ...f,
         versionId: newVersion.id,
+      }));
+
+    // For open findings in the updated draft, preserve stable IDs where possible
+    const remainingOpenInCurrent = currentFindings.filter(
+      (f) => f.id !== findingId && f.status === 'open'
+    );
+
+    const openFindings: Finding[] = freshFindings.map((fresh) => {
+      const matched = remainingOpenInCurrent.find(
+        (cur) =>
+          cur.sourceId === fresh.sourceId &&
+          cur.quotedSpan.toLowerCase() === fresh.quotedSpan.toLowerCase()
+      );
+      return {
+        ...fresh,
+        id: matched ? matched.id : fresh.id,
+        versionId: newVersion.id,
+        status: 'open',
       };
     });
 
-    mockStore.setFindingsForVersion(newVersion.id, updatedFindings);
+    // Combine all findings for Version N+1
+    const allNewFindings: Finding[] = [
+      ...previouslyResolved,
+      resolvedActionedFinding,
+      ...openFindings,
+    ];
+
+    mockStore.setFindingsForVersion(newVersion.id, allNewFindings);
 
     mockStore.logEvent(`finding.${action}ed`, 'finding', findingId, user.id, {
       submissionId,
@@ -160,7 +221,7 @@ export async function POST(
       versionNumber: newVersion.versionNumber,
       sourceId: targetFinding.sourceId,
       oldSpan: targetFinding.quotedSpan,
-      newSpan: replacementText,
+      newSpan: actualAppliedReplacement,
     });
 
     if (isSupabaseConfigured && supabaseServer) {
@@ -175,7 +236,7 @@ export async function POST(
       ]);
 
       await supabaseServer.from('findings').insert(
-        updatedFindings.map((f) => ({
+        allNewFindings.map((f) => ({
           id: `f-${newVersion.id}-${f.id}`,
           version_id: newVersion.id,
           quoted_span: f.quotedSpan,
@@ -202,7 +263,7 @@ export async function POST(
       action,
       newVersionNumber: newVersion.versionNumber,
       newVersionId: newVersion.id,
-      message: `Created Version ${newVersion.versionNumber}. Highlight offsets updated.`,
+      message: `Created Version ${newVersion.versionNumber}. Findings re-evaluated on updated copy.`,
     });
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : 'Error actioning finding';
