@@ -163,3 +163,4 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 - **Solo Developer**: CS student building the entire stack in Google Antigravity.
 - **AI Coding Tools Disclosure**: Antigravity was used as an agentic pair programmer to scaffold components, write TypeScript types, and author unit tests under continuous human engineering direction.
 - **AI Use in App**: Google Gemini API is utilized exclusively as a structured compliance judge, strictly bounded by retrieved evidence, prompt-injection defense isolation, and verified by a post-generation citation filter.
+

@@ -83,3 +83,4 @@ To automatically score and rank pending submissions in the Approvals queue by co
   - **High Risk (Score $\ge$ 50)**: Escalated directly to Dr. Elena Rostova (Legal Reviewer) with high-priority SLA.
   - **Moderate Risk (Score 15–49)**: Routed to Marcus Vance (Manager).
   - **Low Risk (Score $<$ 15)**: Eligible for one-click creator fast-track approval once all rule-based rewrites are accepted.
+

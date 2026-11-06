@@ -8,9 +8,16 @@ export const COOKIE_NAME = 'truenorth_user_id';
 export const ROLE_COOKIE_NAME = 'truenorth_role';
 
 export async function getCurrentUser(): Promise<User> {
-  const cookieStore = cookies();
-  const userIdCookie = cookieStore.get(COOKIE_NAME)?.value;
-  const roleCookie = cookieStore.get(ROLE_COOKIE_NAME)?.value as UserRole | undefined;
+  let userIdCookie: string | undefined;
+  let roleCookie: UserRole | undefined;
+
+  try {
+    const cookieStore = cookies();
+    userIdCookie = cookieStore.get(COOKIE_NAME)?.value;
+    roleCookie = cookieStore.get(ROLE_COOKIE_NAME)?.value as UserRole | undefined;
+  } catch {
+    // Graceful fallback for non-request test contexts
+  }
 
   // If using Supabase in production
   if (isSupabaseConfigured && supabaseServer && userIdCookie) {

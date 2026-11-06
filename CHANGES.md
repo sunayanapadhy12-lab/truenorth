@@ -49,3 +49,4 @@ This document outlines the differences between the preliminary conceptual plan (
 - **Round 1 Concept**: Pure vector search requiring external embedding calls for every query sentence.
 - **Round 2 Reality**: Hybrid retrieval combining sentence tokenization, domain category boosting (claims, compliance, metrics), and graceful keyword overlap fallback when API embeddings are offline.
 - **Why the Change**: Prevents the application from stalling or failing if the embedding API is rate-limited, ensuring that relevant clauses and approved facts are consistently surfaced.
+

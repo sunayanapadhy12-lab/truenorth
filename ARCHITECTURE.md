@@ -174,3 +174,4 @@ erDiagram
 ### D. Server-Enforced RBAC Gating on Legal Claims
 - **Problem**: Client-side disabled buttons can be bypassed via direct API calls.
 - **Solution**: Server route `/api/submissions/[id]/approval` inspects the version's findings. If any finding has `category === 'claim'` or `source_type === 'fact'`, the server rejects approvals unless `user.role === 'reviewer'`. Standard marketing copy can be approved by `manager`.
+

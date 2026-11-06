@@ -36,21 +36,23 @@ export function StatusBanner({ forcedAiFallbackReason }: StatusBannerProps) {
 
   if (isMockMode) {
     return (
-      <div className="bg-blue-50 border-b border-blue-200 text-blue-900 px-4 py-2 text-xs">
+      <div className="bg-amber-500/10 border-b border-amber-300 text-amber-950 px-4 py-2 text-xs">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Database className="w-4 h-4 text-blue-600 shrink-0" />
-            <span className="font-semibold text-blue-900">Running in Local Mock Mode:</span>
-            <span className="text-blue-800 hidden md:inline">
-              Supabase credentials not detected in env vars. State persists in memory for rapid local testing. Connect Supabase before deploying to Vercel serverless.
+            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded font-bold bg-amber-200 text-amber-900 border border-amber-300">
+              <Database className="w-3.5 h-3.5 text-amber-800" />
+              Demo data is not persisted
             </span>
-            <span className="text-blue-800 md:hidden">
-              Local in-memory mock active.
+            <span className="text-amber-900 hidden md:inline">
+              Running in in-memory mock store. All submissions, edits, and audit logs will reset on server restart. Connect Supabase for persistent cloud storage.
+            </span>
+            <span className="text-amber-800 md:hidden">
+              In-memory mock active (resets on restart).
             </span>
           </div>
           <button
             onClick={() => setDismissed(true)}
-            className="text-blue-500 hover:text-blue-800 p-0.5 rounded transition-colors"
+            className="text-amber-700 hover:text-amber-950 p-0.5 rounded transition-colors"
             title="Dismiss notice"
           >
             <X className="w-3.5 h-3.5" />

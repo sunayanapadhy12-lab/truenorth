@@ -30,3 +30,4 @@
 | **Evaluation Harness** | Citation-validity rate & flag precision on labelled test set | 🔵 **Round 3** | Extension point prepared; see `ROUND3.md` |
 | **Guideline-Gap Detection** | Detect repeated dismissals & suggest policy updates | 🔵 **Round 3** | Fields `dismiss_reason` & `events` ready; see `ROUND3.md` |
 | **Risk-Based Reviewer Triage** | Rank submissions by severity and claim risk | 🔵 **Round 3** | Prepared in schema; see `ROUND3.md` |
+
