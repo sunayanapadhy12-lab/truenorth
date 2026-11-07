@@ -41,13 +41,13 @@ export async function GET() {
           updatedAt: d.updated_at,
           currentVersion: currentVersion
             ? {
-                id: currentVersion.id,
-                submissionId: currentVersion.submission_id,
-                versionNumber: currentVersion.version_number,
-                content: currentVersion.content,
-                createdBy: currentVersion.created_by,
-                createdAt: currentVersion.created_at,
-              }
+              id: currentVersion.id,
+              submissionId: currentVersion.submission_id,
+              versionNumber: currentVersion.version_number,
+              content: currentVersion.content,
+              createdBy: currentVersion.created_by,
+              createdAt: currentVersion.created_at,
+            }
             : undefined,
         };
       });
@@ -87,8 +87,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const submissionId = `sub-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
-    const versionId = `ver-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
+    const submissionId = crypto.randomUUID();
+    const versionId = crypto.randomUUID();
     const now = new Date().toISOString();
 
     const submission: Submission = {
