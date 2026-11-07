@@ -10,7 +10,7 @@
 
 TrueNorth is architected for immediate evaluation. A judge opens the deployed app with **no signup, no email verification, and no setup**.
 
-1. **Open the App**: Navigate to [`http://localhost:3000`](http://localhost:3000) (or your deployed Vercel link).
+1. **Open the App**: Navigate to https://truenorth-ten.vercel.app/.
 2. **Switch Personas Instantly**: Click the **Persona Switcher** pill in the top-right header to switch roles with a single click:
    - 🧑‍💻 **Alex Rivera (Creator)**: Default persona for submitting copy and resolving findings.
    - 👔 **Marcus Vance (Manager)**: Approves standard copy, comments, and reviews diffs.
