@@ -16,7 +16,7 @@ export const CRANBERRY_ORG: Organization = {
 
 export const SEED_USERS: User[] = [
   {
-    id: 'u0000000-0000-0000-0000-000000000001',
+    id: 'b0000000-0000-0000-0000-000000000001',
     organizationId: CRANBERRY_ORG.id,
     name: 'Sarah Chen',
     email: 'admin@cranberrylabs.io',
@@ -25,7 +25,7 @@ export const SEED_USERS: User[] = [
     createdAt: '2026-01-01T00:00:00Z',
   },
   {
-    id: 'u0000000-0000-0000-0000-000000000002',
+    id: 'b0000000-0000-0000-0000-000000000002',
     organizationId: CRANBERRY_ORG.id,
     name: 'Alex Rivera',
     email: 'creator@cranberrylabs.io',
@@ -34,7 +34,7 @@ export const SEED_USERS: User[] = [
     createdAt: '2026-01-02T00:00:00Z',
   },
   {
-    id: 'u0000000-0000-0000-0000-000000000003',
+    id: 'b0000000-0000-0000-0000-000000000003',
     organizationId: CRANBERRY_ORG.id,
     name: 'Marcus Vance',
     email: 'manager@cranberrylabs.io',
@@ -43,7 +43,7 @@ export const SEED_USERS: User[] = [
     createdAt: '2026-01-02T00:00:00Z',
   },
   {
-    id: 'u0000000-0000-0000-0000-000000000004',
+    id: 'b0000000-0000-0000-0000-000000000004',
     organizationId: CRANBERRY_ORG.id,
     name: 'Dr. Elena Rostova',
     email: 'reviewer@cranberrylabs.io',
@@ -344,7 +344,7 @@ export const SEED_CLAUSES: GuidelineClause[] = [
 
 export const SEED_TERMINOLOGY: TerminologyItem[] = [
   {
-    id: 't0000000-0000-0000-0000-000000000001',
+    id: 'c0000000-0000-0000-0000-000000000001',
     organizationId: CRANBERRY_ORG.id,
     term: '100% secure',
     preferredTerm: 'defense-in-depth secured',
@@ -355,7 +355,7 @@ export const SEED_TERMINOLOGY: TerminologyItem[] = [
     createdAt: '2026-01-05T00:00:00Z',
   },
   {
-    id: 't0000000-0000-0000-0000-000000000002',
+    id: 'c0000000-0000-0000-0000-000000000002',
     organizationId: CRANBERRY_ORG.id,
     term: 'unbreakable',
     preferredTerm: 'highly resilient',
@@ -366,7 +366,7 @@ export const SEED_TERMINOLOGY: TerminologyItem[] = [
     createdAt: '2026-01-05T00:00:00Z',
   },
   {
-    id: 't0000000-0000-0000-0000-000000000003',
+    id: 'c0000000-0000-0000-0000-000000000003',
     organizationId: CRANBERRY_ORG.id,
     term: 'military-grade',
     preferredTerm: 'AES-256',
@@ -377,7 +377,7 @@ export const SEED_TERMINOLOGY: TerminologyItem[] = [
     createdAt: '2026-01-05T00:00:00Z',
   },
   {
-    id: 't0000000-0000-0000-0000-000000000004',
+    id: 'c0000000-0000-0000-0000-000000000004',
     organizationId: CRANBERRY_ORG.id,
     term: 'game-changing',
     preferredTerm: 'high-impact',
@@ -388,7 +388,7 @@ export const SEED_TERMINOLOGY: TerminologyItem[] = [
     createdAt: '2026-01-05T00:00:00Z',
   },
   {
-    id: 't0000000-0000-0000-0000-000000000005',
+    id: 'c0000000-0000-0000-0000-000000000005',
     organizationId: CRANBERRY_ORG.id,
     term: 'click here',
     preferredTerm: 'explore documentation',
@@ -399,7 +399,7 @@ export const SEED_TERMINOLOGY: TerminologyItem[] = [
     createdAt: '2026-01-05T00:00:00Z',
   },
   {
-    id: 't0000000-0000-0000-0000-000000000006',
+    id: 'c0000000-0000-0000-0000-000000000006',
     organizationId: CRANBERRY_ORG.id,
     term: 'BerryCore',
     preferredTerm: 'CranberryCloud',
@@ -410,7 +410,7 @@ export const SEED_TERMINOLOGY: TerminologyItem[] = [
     createdAt: '2026-01-05T00:00:00Z',
   },
   {
-    id: 't0000000-0000-0000-0000-000000000007',
+    id: 'c0000000-0000-0000-0000-000000000007',
     organizationId: CRANBERRY_ORG.id,
     term: 'Cranberry cloud',
     preferredTerm: 'CranberryCloud',
@@ -421,7 +421,7 @@ export const SEED_TERMINOLOGY: TerminologyItem[] = [
     createdAt: '2026-01-05T00:00:00Z',
   },
   {
-    id: 't0000000-0000-0000-0000-000000000008',
+    id: 'c0000000-0000-0000-0000-000000000008',
     organizationId: CRANBERRY_ORG.id,
     term: 'cranberrycloud',
     preferredTerm: 'CranberryCloud',
@@ -432,7 +432,7 @@ export const SEED_TERMINOLOGY: TerminologyItem[] = [
     createdAt: '2026-01-05T00:00:00Z',
   },
   {
-    id: 't0000000-0000-0000-0000-000000000009',
+    id: 'c0000000-0000-0000-0000-000000000009',
     organizationId: CRANBERRY_ORG.id,
     term: 'whitelist',
     preferredTerm: 'allowlist',
@@ -443,7 +443,7 @@ export const SEED_TERMINOLOGY: TerminologyItem[] = [
     createdAt: '2026-01-05T00:00:00Z',
   },
   {
-    id: 't0000000-0000-0000-0000-000000000010',
+    id: 'c0000000-0000-0000-0000-000000000010',
     organizationId: CRANBERRY_ORG.id,
     term: 'blacklist',
     preferredTerm: 'denylist',
@@ -454,7 +454,7 @@ export const SEED_TERMINOLOGY: TerminologyItem[] = [
     createdAt: '2026-01-05T00:00:00Z',
   },
   {
-    id: 't0000000-0000-0000-0000-000000000011',
+    id: 'c0000000-0000-0000-0000-000000000011',
     organizationId: CRANBERRY_ORG.id,
     term: 'best-in-class',
     preferredTerm: 'industry-leading',
@@ -465,7 +465,7 @@ export const SEED_TERMINOLOGY: TerminologyItem[] = [
     createdAt: '2026-01-05T00:00:00Z',
   },
   {
-    id: 't0000000-0000-0000-0000-000000000012',
+    id: 'c0000000-0000-0000-0000-000000000012',
     organizationId: CRANBERRY_ORG.id,
     term: 'foolproof',
     preferredTerm: 'intuitive',
@@ -476,7 +476,7 @@ export const SEED_TERMINOLOGY: TerminologyItem[] = [
     createdAt: '2026-01-05T00:00:00Z',
   },
   {
-    id: 't0000000-0000-0000-0000-000000000013',
+    id: 'c0000000-0000-0000-0000-000000000013',
     organizationId: CRANBERRY_ORG.id,
     term: 'guaranteed 100% uptime',
     preferredTerm: 'engineered 99.99% availability',
@@ -487,7 +487,7 @@ export const SEED_TERMINOLOGY: TerminologyItem[] = [
     createdAt: '2026-01-05T00:00:00Z',
   },
   {
-    id: 't0000000-0000-0000-0000-000000000014',
+    id: 'c0000000-0000-0000-0000-000000000014',
     organizationId: CRANBERRY_ORG.id,
     term: 'cheap',
     preferredTerm: 'cost-effective',
@@ -498,7 +498,7 @@ export const SEED_TERMINOLOGY: TerminologyItem[] = [
     createdAt: '2026-01-05T00:00:00Z',
   },
   {
-    id: 't0000000-0000-0000-0000-000000000015',
+    id: 'c0000000-0000-0000-0000-000000000015',
     organizationId: CRANBERRY_ORG.id,
     term: 'miracle',
     preferredTerm: 'breakthrough',
@@ -509,7 +509,7 @@ export const SEED_TERMINOLOGY: TerminologyItem[] = [
     createdAt: '2026-01-05T00:00:00Z',
   },
   {
-    id: 't0000000-0000-0000-0000-000000000016',
+    id: 'c0000000-0000-0000-0000-000000000016',
     organizationId: CRANBERRY_ORG.id,
     term: '100% security',
     preferredTerm: 'defense-in-depth security',
@@ -520,7 +520,7 @@ export const SEED_TERMINOLOGY: TerminologyItem[] = [
     createdAt: '2026-01-05T00:00:00Z',
   },
   {
-    id: 't0000000-0000-0000-0000-000000000017',
+    id: 'c0000000-0000-0000-0000-000000000017',
     organizationId: CRANBERRY_ORG.id,
     term: 'fastest',
     preferredTerm: 'ultra-low latency',
@@ -531,7 +531,7 @@ export const SEED_TERMINOLOGY: TerminologyItem[] = [
     createdAt: '2026-01-05T00:00:00Z',
   },
   {
-    id: 't0000000-0000-0000-0000-000000000018',
+    id: 'c0000000-0000-0000-0000-000000000018',
     organizationId: CRANBERRY_ORG.id,
     term: 'revolutionary',
     preferredTerm: 'next-generation',
@@ -542,7 +542,7 @@ export const SEED_TERMINOLOGY: TerminologyItem[] = [
     createdAt: '2026-01-05T00:00:00Z',
   },
   {
-    id: 't0000000-0000-0000-0000-000000000019',
+    id: 'c0000000-0000-0000-0000-000000000019',
     organizationId: CRANBERRY_ORG.id,
     term: 'magical',
     preferredTerm: 'intuitive',
@@ -553,7 +553,7 @@ export const SEED_TERMINOLOGY: TerminologyItem[] = [
     createdAt: '2026-01-05T00:00:00Z',
   },
   {
-    id: 't0000000-0000-0000-0000-000000000020',
+    id: 'c0000000-0000-0000-0000-000000000020',
     organizationId: CRANBERRY_ORG.id,
     term: 'guaranteed results',
     preferredTerm: 'measurable outcomes',
@@ -808,4 +808,6 @@ Furthermore, Cranberry Labs is officially SOC 2 certified, ensuring complete pro
 With our foolproof configuration wizard, anyone on your team can migrate in 5 minutes flat. Enjoy guaranteed 100% uptime backed by our best-in-class multi-region mesh. Say goodbye to outages forever!`,
   },
 ];
+
+
 
