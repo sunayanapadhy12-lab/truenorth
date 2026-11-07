@@ -6,6 +6,31 @@ import { executeReviewPipeline } from '@/lib/engine/pipeline';
 import { Submission, SubmissionChannel, SubmissionAudience } from '@/lib/types';
 import { CRANBERRY_ORG } from '@/lib/seed/cranberry-labs-data';
 
+function getErrorMessage(error: unknown, fallback: string): string {
+  if (error instanceof Error) return error.message;
+
+  if (typeof error === 'object' && error !== null) {
+    const dbError = error as {
+      message?: unknown;
+      code?: unknown;
+      details?: unknown;
+      hint?: unknown;
+    };
+
+    return [
+      dbError.message,
+      dbError.code ? `Code: ${dbError.code}` : '',
+      dbError.details,
+      dbError.hint,
+    ]
+      .filter((part): part is string => typeof part === 'string' && part.length > 0)
+      .join(' | ') || fallback;
+  }
+
+  return fallback;
+}
+
+
 export async function GET() {
   try {
     if (isSupabaseConfigured && supabaseServer) {
@@ -58,7 +83,7 @@ export async function GET() {
     const submissions = mockStore.getSubmissions();
     return NextResponse.json({ submissions });
   } catch (error: unknown) {
-    const msg = error instanceof Error ? error.message : 'Failed to fetch submissions';
+    const msg = getErrorMessage(error, 'Failed to fetch submissions');
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
@@ -132,8 +157,9 @@ export async function POST(req: NextRequest) {
 
     // 4. Save in Supabase if configured
     if (isSupabaseConfigured && supabaseServer) {
-      await supabaseServer.from('submissions').insert([
-        {
+      const { error: submissionError } = await supabaseServer
+        .from('submissions')
+        .insert({
           id: submission.id,
           organization_id: submission.organizationId,
           creator_id: submission.creatorId,
@@ -142,38 +168,54 @@ export async function POST(req: NextRequest) {
           audience: submission.audience,
           current_status: submission.currentStatus,
           is_locked: submission.isLocked,
-        },
-      ]);
+        });
 
-      await supabaseServer.from('submission_versions').insert([
-        {
+      if (submissionError) {
+        console.error('Submission insert failed:', submissionError);
+        throw submissionError;
+      }
+
+      const { error: versionError } = await supabaseServer
+        .from('submission_versions')
+        .insert({
           id: versionId,
           submission_id: submission.id,
           version_number: 1,
           content: content.trim(),
           created_by: user.id,
-        },
-      ]);
+        });
+
+      if (versionError) {
+        console.error('Version insert failed:', versionError);
+        throw versionError;
+      }
 
       if (reviewResult.findings.length > 0) {
-        await supabaseServer.from('findings').insert(
-          reviewResult.findings.map((f) => ({
-            id: f.id,
-            version_id: versionId,
-            quoted_span: f.quotedSpan,
-            span_start: f.spanStart,
-            span_end: f.spanEnd,
-            category: f.category,
-            source_id: f.sourceId,
-            source_type: f.sourceType,
-            reason: f.reason,
-            severity: f.severity,
-            suggested_rewrite: f.suggestedRewrite,
-            origin: f.origin,
-            confidence: f.confidence,
-            status: f.status,
-          }))
-        );
+        const { error: findingsError } = await supabaseServer
+          .from('findings')
+          .insert(
+            reviewResult.findings.map((f) => ({
+              id: f.id,
+              version_id: versionId,
+              quoted_span: f.quotedSpan,
+              span_start: f.spanStart,
+              span_end: f.spanEnd,
+              category: f.category,
+              source_id: f.sourceId,
+              source_type: f.sourceType,
+              reason: f.reason,
+              severity: f.severity,
+              suggested_rewrite: f.suggestedRewrite,
+              origin: f.origin,
+              confidence: f.confidence,
+              status: f.status,
+            }))
+          );
+
+        if (findingsError) {
+          console.error('Findings insert failed:', findingsError);
+          throw findingsError;
+        }
       }
     }
 
@@ -186,8 +228,7 @@ export async function POST(req: NextRequest) {
       fallbackReason: reviewResult.fallbackReason,
     });
   } catch (error: unknown) {
-    const msg = error instanceof Error ? error.message : 'Failed to create submission';
+    const msg = getErrorMessage(error, 'Failed to create submission');
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
-
